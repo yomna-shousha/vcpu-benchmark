@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const { performance } = require('perf_hooks');
 
 console.log('=== CLOUDFLARE WORKERS VCPU BENCHMARK ===');
@@ -91,12 +93,17 @@ console.log(`Total CPU Time: ${totalTime.toFixed(2)}ms`);
 console.log(`CPU Score: ${(100000 / totalTime).toFixed(2)} (higher = better)`);
 console.log(`Plan Type: ${process.env.CF_PLAN_TYPE || 'Unknown'}`);
 
-// Create a simple worker for deployment
-require('fs').writeFileSync('src/index.js', `
-export default {
+// Create src directory and worker file
+const srcDir = path.join(process.cwd(), 'src');
+if (!fs.existsSync(srcDir)) {
+  fs.mkdirSync(srcDir, { recursive: true });
+}
+
+const workerCode = `export default {
   async fetch(request) {
     const results = {
       timestamp: new Date().toISOString(),
+      planType: "Free Plan",
       buildMetrics: {
         primeTime: ${primeTime.toFixed(2)},
         matrixTime: ${matrixTime.toFixed(2)}, 
@@ -111,7 +118,13 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     });
   }
-};
-`);
+};`;
 
-console.log('\n=== BENCHMARK COMPLETE ===\n');
+fs.writeFileSync(path.join(srcDir, 'index.js'), workerCode);
+
+console.log('\n=== BENCHMARK COMPLETE ===');
+console.log('🎯 SAVE THESE NUMBERS FOR COMPARISON:');
+console.log(`   CPU Score: ${(100000 / totalTime).toFixed(2)}`);
+console.log(`   Prime Time: ${primeTime.toFixed(2)}ms`);
+console.log(`   Matrix Time: ${matrixTime.toFixed(2)}ms`);
+console.log('\n');
