@@ -1,7 +1,36 @@
 {
   "name": "vcpu-benchmark",
   "version": "1.0.0",
+  "description": "A comprehensive benchmark for Cloudflare Workers' build environment vCPU performance with statistical analysis.",
+  "main": "src/index.js",
   "scripts": {
-    "build": "node benchmark.js"
-  }
+    "start": "npx wrangler dev",
+    "build": "node benchmark.js",
+    "build:detailed": "node benchmark.js 10",
+    "deploy": "npm run build && npx wrangler deploy",
+    "test": "node benchmark.js 3"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "benchmark",
+    "cpu",
+    "vcpu",
+    "performance",
+    "ci-cd",
+    "build-environment"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.37.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "your-repo-url"
+  },
+  "homepage": "your-worker-url-after-deployment"
 }
