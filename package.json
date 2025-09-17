@@ -6,9 +6,10 @@
   "scripts": {
     "start": "npx wrangler dev",
     "build": "node benchmark.js",
-    "build:detailed": "node benchmark.js 10",
     "deploy": "npm run build && npx wrangler deploy",
-    "test": "node benchmark.js 3"
+    "test:quick": "node benchmark.js 5",
+    "test:standard": "node benchmark.js 20",
+    "test:stress": "node benchmark.js 50"
   },
   "keywords": [
     "cloudflare",
